@@ -6,12 +6,11 @@
     <title>Document</title>
 </head>
 <body>
-   <h3>Contact US</h3>
-    <form method="post" action="/contactprocess">
+     <h1> login Form </h1>
+     <form method="post" action="/loginprocess">
         {% csrf_token %}
-        Name: <input type="text" name="txt1"/> <br/>
-        Mobile : <input type="text" name="txt2"/><br/>
-        Message: <input type="text" name="txt3"/><br/>
+        Email : <input type="email"  name="email"/>
         <input type="submit"/>
+     </form>
 </body>
 </html>
