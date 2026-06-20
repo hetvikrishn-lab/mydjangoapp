@@ -28,4 +28,9 @@ urlpatterns = [
     path('display-category',views.display_category, name='display_category'),
     path('delete-category/<int:id>',views.delete_category, name='delete_category'),
     path('edit-category/<int:id>',views.edit_category, name='edit_category'),
+    path('user_login', views.user_login_view, name='login'),
+    path('user_register/', views.user_register_view, name='register'),
+    path('user_home/', views.user_home_view, name='home'),
+    path('user_logout/', views.user_logout_view, name='logout'),
+    path('product', views.displayProduct, name='product'),
 ]

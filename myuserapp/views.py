@@ -4,6 +4,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 from . models import Student
 from . models import Category, Product
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 # Create your views here.
 
 def mailsenddemo(request):
@@ -103,6 +106,10 @@ def displayStudent(request):
     mystudentlist = Student.objects.all()
     return render(request,'display-student.html',{'mydata':mystudentlist})
 
+def displayProduct(request):
+    productlist = Product.objects.all()
+    return render(request,'product.html',{'mydata':productlist})
+
 def deleteStudent(request,id):
     Student.objects.get(id=id).delete()
     return redirect(displayStudent)
@@ -129,3 +136,56 @@ def edit_category(request,id):
         category.save()
         return redirect('display_category')
     return render(request, 'edit-category.html', {'category': category})
+
+def user_register_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists")
+            return redirect('register')
+
+        User.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
+
+        messages.success(request, "Registration Successful")
+        return redirect('login')
+
+    return render(request, 'user_register.html')
+
+
+def user_login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
+
+        if user is not None:
+            login(request, user)
+            return redirect(user_home_view)
+        else:
+            messages.error(request, "Invalid Username or Password")
+
+    return render(request, 'user_login.html')
+
+
+def user_home_view(request):
+    if request.user.is_authenticated:
+        return redirect('user_login')
+
+    return render(request, 'user_home.html')
+
+
+def user_logout_view(request):
+    logout(request)
+    return redirect('user_logout')
